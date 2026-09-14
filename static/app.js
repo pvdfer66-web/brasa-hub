@@ -8,6 +8,15 @@
   };
   var PLAT_LABEL = { whatsapp: "WhatsApp", telegram: "Telegram", discord: "Discord" };
 
+  // Link de monetização (popunder). Deixe vazio pra não abrir nada ainda.
+  var MONETIZE_URL = "";
+
+  function openPopunder(){
+    if(!MONETIZE_URL) return;
+    var adWin = window.open(MONETIZE_URL, "_blank");
+    if(adWin) window.focus();
+  }
+
   function fmt(n){
     return (n || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
@@ -62,10 +71,11 @@
         '<p class="desc">' + escapeHtml(g.desc) + '</p>' +
         '<div class="card-foot">' +
           '<span class="tag">' + label + '</span>' +
-          '<a class="join" href="' + escapeHtml(g.link) + '" target="_blank" rel="noopener" aria-label="Entrar no grupo ' + escapeHtml(g.name) + '">Entrar' +
+          '<a class="join" href="grupo.html?id=' + encodeURIComponent(g.id) + '" target="_blank" rel="noopener" aria-label="Ver grupo ' + escapeHtml(g.name) + '">Entrar' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
           '</a>' +
         '</div>';
+      card.querySelector(".join").addEventListener("click", openPopunder);
       card.addEventListener("click", function(e){
         if(e.target.closest(".join")) return;
         window.location.href = "grupo.html?id=" + encodeURIComponent(g.id);

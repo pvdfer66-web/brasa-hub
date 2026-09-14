@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Painel Admin — Brasa</title>
+<title>Painel Admin — Gruposzap18</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="styles.css">
@@ -19,7 +20,7 @@
         </svg>
       </span>
       <div>
-        BRASA
+        GRUPOSZAP18
         <small>Painel Admin</small>
       </div>
     </a>
@@ -52,7 +53,7 @@
       </div>
 
       <div class="add-card">
-        <h2>Adicionar grupo</h2>
+        <h2 id="formTitle">Adicionar grupo</h2>
         <p class="error-msg" id="formError" hidden></p>
         <form id="addForm">
           <div class="form-grid">
@@ -81,11 +82,14 @@
               <textarea id="fDesc" required maxlength="160" placeholder="Uma frase sobre o grupo"></textarea>
             </div>
             <div class="field span-3">
-              <label for="fPhoto">Foto do grupo (opcional)</label>
+              <label for="fPhoto" id="fPhotoLabel">Foto do grupo (opcional)</label>
               <input id="fPhoto" type="file" accept="image/*">
             </div>
           </div>
-          <button class="btn" type="submit" style="margin-top:16px;">Adicionar grupo</button>
+          <div style="display:flex; gap:10px; margin-top:16px;">
+            <button class="btn" type="submit" id="submitBtn">Adicionar grupo</button>
+            <button class="btn ghost" type="button" id="cancelEditBtn" hidden>Cancelar edição</button>
+          </div>
         </form>
       </div>
 

@@ -40,7 +40,7 @@
         return res.json();
       })
       .then(function(g){
-        document.title = g.name + " — Brasa";
+        document.title = g.name + " — Gruposzap18";
         detailIcon.innerHTML = ICONS[g.plat] || ICONS.whatsapp;
         detailName.textContent = g.name;
         detailMembers.textContent = fmt(g.members) + " membros";

@@ -20,7 +20,7 @@ from app.auth import (
 from app.firebase_client import groups_collection
 from app.schemas import Group, GroupIn, LoginRequest
 
-app = FastAPI(title="Brasa — Hub de Grupos")
+app = FastAPI(title="Gruposzap18 — Hub de Grupos")
 
 PHOTO_MAX_SIZE = (480, 480)
 
@@ -133,6 +133,40 @@ def create_group(
         }
     )
     return Group(id=doc_ref.id, photo=photo_url, **payload.model_dump())
+
+
+@app.put("/api/groups/{group_id}", response_model=Group)
+def update_group(
+    group_id: str,
+    name: str = Form(...),
+    plat: str = Form(...),
+    link: str = Form(...),
+    members: int = Form(0),
+    desc: str = Form(""),
+    photo: UploadFile | None = File(None),
+    _: None = Depends(get_current_admin),
+):
+    doc_ref = groups_collection.document(group_id)
+    doc = doc_ref.get()
+    if not doc.exists:
+        raise HTTPException(status_code=404, detail="Grupo não encontrado")
+
+    payload = GroupIn(name=name, plat=plat, link=link, members=members, desc=desc)
+    photo_url = doc.to_dict().get("photo", "")
+    if photo is not None and photo.filename:
+        photo_url = _encode_photo(photo)
+
+    doc_ref.update(
+        {
+            "name": payload.name.strip(),
+            "plat": payload.plat,
+            "link": payload.link.strip(),
+            "members": payload.members,
+            "desc": payload.desc.strip(),
+            "photo": photo_url,
+        }
+    )
+    return Group(id=group_id, photo=photo_url, **payload.model_dump())
 
 
 @app.delete("/api/groups/{group_id}", status_code=status.HTTP_204_NO_CONTENT)

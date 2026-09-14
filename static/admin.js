@@ -21,15 +21,49 @@
 
   var addForm = document.getElementById("addForm");
   var formError = document.getElementById("formError");
+  var formTitle = document.getElementById("formTitle");
+  var submitBtn = document.getElementById("submitBtn");
+  var cancelEditBtn = document.getElementById("cancelEditBtn");
   var fName = document.getElementById("fName");
   var fPlat = document.getElementById("fPlat");
   var fLink = document.getElementById("fLink");
   var fMembers = document.getElementById("fMembers");
   var fDesc = document.getElementById("fDesc");
   var fPhoto = document.getElementById("fPhoto");
+  var fPhotoLabel = document.getElementById("fPhotoLabel");
 
   var adminList = document.getElementById("adminList");
   var adminEmpty = document.getElementById("adminEmpty");
+
+  var editingId = null;
+
+  function enterEditMode(g){
+    editingId = g.id;
+    fName.value = g.name;
+    fPlat.value = g.plat;
+    fLink.value = g.link;
+    fMembers.value = g.members;
+    fDesc.value = g.desc;
+    fPhoto.value = "";
+    formTitle.textContent = "Editar grupo";
+    submitBtn.textContent = "Salvar alterações";
+    fPhotoLabel.textContent = g.photo
+      ? "Foto do grupo (deixe em branco pra manter a atual)"
+      : "Foto do grupo (opcional)";
+    cancelEditBtn.hidden = false;
+    addForm.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function exitEditMode(){
+    editingId = null;
+    addForm.reset();
+    formTitle.textContent = "Adicionar grupo";
+    submitBtn.textContent = "Adicionar grupo";
+    fPhotoLabel.textContent = "Foto do grupo (opcional)";
+    cancelEditBtn.hidden = true;
+  }
+
+  cancelEditBtn.addEventListener("click", exitEditMode);
 
   function showLogin(){
     loginSection.hidden = false;
@@ -74,8 +108,6 @@
   addForm.addEventListener("submit", function(e){
     e.preventDefault();
     formError.hidden = true;
-
-    var submitBtn = addForm.querySelector("button[type=submit]");
     submitBtn.disabled = true;
 
     var formData = new FormData();
@@ -88,13 +120,16 @@
       formData.append("photo", fPhoto.files[0]);
     }
 
-    fetch("/api/groups", {
-      method: "POST",
+    var url = editingId ? "/api/groups/" + encodeURIComponent(editingId) : "/api/groups";
+    var method = editingId ? "PUT" : "POST";
+
+    fetch(url, {
+      method: method,
       body: formData
     }).then(function(res){
       if(res.status === 401){ showLogin(); throw new Error("Sessão expirada"); }
       if(!res.ok) return res.json().then(function(data){ throw new Error(data.detail || "Erro ao salvar"); });
-      addForm.reset();
+      exitEditMode();
       loadGroups();
     }).catch(function(err){
       formError.textContent = err.message;
@@ -126,6 +161,18 @@
                 '<div class="desc">' + escapeHtml(g.desc) + '</div>' +
               '</div>' +
             '</div>';
+          var actions = document.createElement("div");
+          actions.style.display = "flex";
+          actions.style.gap = "8px";
+          actions.style.flex = "none";
+
+          var editBtn = document.createElement("button");
+          editBtn.className = "btn ghost";
+          editBtn.type = "button";
+          editBtn.textContent = "Editar";
+          editBtn.addEventListener("click", function(){ enterEditMode(g); });
+          actions.appendChild(editBtn);
+
           var delBtn = document.createElement("button");
           delBtn.className = "btn danger";
           delBtn.type = "button";
@@ -140,7 +187,9 @@
               })
               .catch(function(){ alert("Erro ao remover o grupo."); });
           });
-          row.appendChild(delBtn);
+          actions.appendChild(delBtn);
+
+          row.appendChild(actions);
           adminList.appendChild(row);
         });
       });

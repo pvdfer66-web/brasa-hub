@@ -1,4 +1,4 @@
-# Brasa — Hub de Grupos (backend Python)
+# Gruposzap18 — Hub de Grupos (backend Python)
 
 Backend em **FastAPI** que serve o site público e o painel admin, e guarda os grupos no **Firestore** (via `firebase-admin`, do lado do servidor). O navegador nunca fala diretamente com o Firebase — tudo passa pela API em Python.
 
