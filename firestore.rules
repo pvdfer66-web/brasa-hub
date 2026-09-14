@@ -1,0 +1,13 @@
+rules_version = '2';
+
+// Ninguém acessa o Firestore diretamente pelo navegador nesta versão do projeto:
+// o backend em Python (FastAPI) usa o SDK admin, que tem acesso total e ignora
+// estas regras. Elas só existem para bloquear qualquer tentativa de acesso
+// direto (por exemplo, se alguém descobrir o projectId).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
