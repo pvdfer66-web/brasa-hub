@@ -47,6 +47,10 @@
         detailTag.textContent = PLAT_LABEL[g.plat] || "Grupo";
         detailDesc.textContent = g.desc;
         detailJoin.href = g.link;
+        detailJoin.addEventListener("click", function(e){
+          e.preventDefault();
+          window.open(g.link, "_blank");
+        });
         if(g.photo){
           detailPhoto.src = g.photo;
           detailPhotoWrap.hidden = false;

@@ -75,6 +75,10 @@
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
           '</a>' +
         '</div>';
+      card.querySelector(".join").addEventListener("click", function(e){
+        e.preventDefault();
+        window.open(this.getAttribute("href"), "_blank");
+      });
       card.addEventListener("click", function(e){
         if(e.target.closest(".join")) return;
         window.location.href = "grupo.html?id=" + encodeURIComponent(g.id);
