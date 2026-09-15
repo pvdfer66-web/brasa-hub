@@ -195,6 +195,7 @@ def _fmt_int(n: int) -> str:
 
 
 @app.get("/", response_class=HTMLResponse)
+@app.head("/", response_class=HTMLResponse)
 def home(request: Request):
     groups = _fetch_groups()
     total_members = sum(g.members for g in groups)
@@ -224,6 +225,7 @@ def home(request: Request):
 
 
 @app.get("/grupo.html", response_class=HTMLResponse)
+@app.head("/grupo.html", response_class=HTMLResponse)
 def group_page(request: Request, id: str | None = None):
     group = None
     if id:
