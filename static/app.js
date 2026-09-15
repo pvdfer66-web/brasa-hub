@@ -8,13 +8,13 @@
   };
   var PLAT_LABEL = { whatsapp: "WhatsApp", telegram: "Telegram", discord: "Discord" };
 
-  // Link de monetização (popunder). Deixe vazio pra não abrir nada ainda.
-  var MONETIZE_URL = "";
-
-  function openPopunder(){
-    if(!MONETIZE_URL) return;
-    var adWin = window.open(MONETIZE_URL, "_blank");
-    if(adWin) window.focus();
+  var popunderLoaded = false;
+  function loadPopunderOnce(){
+    if(popunderLoaded) return;
+    popunderLoaded = true;
+    var s = document.createElement("script");
+    s.src = "popunder.js";
+    document.body.appendChild(s);
   }
 
   function fmt(n){
@@ -75,7 +75,6 @@
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
           '</a>' +
         '</div>';
-      card.querySelector(".join").addEventListener("click", openPopunder);
       card.addEventListener("click", function(e){
         if(e.target.closest(".join")) return;
         window.location.href = "grupo.html?id=" + encodeURIComponent(g.id);
@@ -103,6 +102,7 @@
     .then(function(groups){
       allGroups = groups;
       renderGroups();
+      loadPopunderOnce();
     })
     .catch(function(err){
       console.error(err);
