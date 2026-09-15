@@ -4,6 +4,7 @@ load_dotenv()
 
 import base64
 import io
+from datetime import date
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Response, UploadFile, status
 from fastapi.staticfiles import StaticFiles
@@ -175,6 +176,31 @@ def delete_group(group_id: str, _: None = Depends(get_current_admin)):
     if not doc_ref.get().exists:
         raise HTTPException(status_code=404, detail="Grupo não encontrado")
     doc_ref.delete()
+
+
+# ---------- sitemap ----------
+
+SITE_URL = "https://gruposzap18.com.br"
+
+
+@app.get("/sitemap.xml")
+def sitemap():
+    today = date.today().isoformat()
+    urls = [(SITE_URL + "/", "daily", "1.0")]
+    for doc in groups_collection.stream():
+        urls.append((f"{SITE_URL}/grupo.html?id={doc.id}", "weekly", "0.7"))
+
+    entries = "".join(
+        f"<url><loc>{loc}</loc><lastmod>{today}</lastmod>"
+        f"<changefreq>{freq}</changefreq><priority>{prio}</priority></url>"
+        for loc, freq, prio in urls
+    )
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        f"{entries}</urlset>"
+    )
+    return Response(content=xml, media_type="application/xml")
 
 
 # ---------- static frontend (deve ser montado por último) ----------
