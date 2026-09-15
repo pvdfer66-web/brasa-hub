@@ -8,15 +8,6 @@
   };
   var PLAT_LABEL = { whatsapp: "WhatsApp", telegram: "Telegram", discord: "Discord" };
 
-  var popunderLoaded = false;
-  function loadPopunderOnce(){
-    if(popunderLoaded) return;
-    popunderLoaded = true;
-    var s = document.createElement("script");
-    s.src = "popunder.js";
-    document.body.appendChild(s);
-  }
-
   function fmt(n){
     return (n || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
@@ -98,6 +89,15 @@
 
   searchInput.addEventListener("input", renderGroups);
 
+  var initialGroupsEl = document.getElementById("initial-groups");
+  var hadInitialGroups = false;
+  if(initialGroupsEl){
+    try {
+      allGroups = JSON.parse(initialGroupsEl.textContent) || [];
+      hadInitialGroups = allGroups.length > 0;
+    } catch(e) { /* ignore malformed embedded data, fetch will fill it in */ }
+  }
+
   fetch("/api/groups")
     .then(function(res){
       if(!res.ok) throw new Error("Falha ao carregar grupos");
@@ -106,10 +106,10 @@
     .then(function(groups){
       allGroups = groups;
       renderGroups();
-      loadPopunderOnce();
     })
     .catch(function(err){
       console.error(err);
+      if(hadInitialGroups) return; // já temos o conteúdo renderizado pelo servidor, não sobrescreve
       emptyTitle.textContent = "Não foi possível carregar os grupos";
       emptyText.textContent = "Verifique se o servidor está rodando e recarregue a página.";
       emptyState.classList.add("show");

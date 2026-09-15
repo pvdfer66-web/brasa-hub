@@ -55,20 +55,26 @@ Não usa mais o Firebase Authentication — o login do painel é uma senha únic
 ```
 hub/
   app/
-    main.py             # rotas da API (login, logout, CRUD de grupos)
+    main.py             # rotas da API (login, logout, CRUD de grupos) + páginas renderizadas no servidor
     auth.py             # sessão do admin (cookie assinado)
     firebase_client.py  # conexão com o Firestore via firebase-admin
     schemas.py          # modelos Pydantic (Group, LoginRequest)
+    templates/
+      index.html          # home renderizada no servidor (Jinja2) — grupos já vêm no HTML, pro Google indexar
+      grupo.html          # página de detalhe do grupo, também renderizada no servidor
   static/
-    index.html           # site público
     admin.html            # painel admin
-    app.js                 # lê /api/groups e monta os cards
+    app.js                 # hidrata a home com os dados já embutidos e atualiza via /api/groups
     admin.js                # login + cadastro/remoção de grupos
     styles.css              # tema vermelho e preto
   requirements.txt
   .env.example
   firestore.rules
 ```
+
+## SEO
+
+`/` e `/grupo.html?id=...` são renderizados no servidor (Jinja2): o HTML que qualquer crawler recebe já vem com os grupos, título, meta description e Open Graph — não depende de JavaScript rodar pra ter conteúdo. Também tem `/robots.txt` apontando pro `/sitemap.xml`. O `app.js` só reidrata a busca/interatividade no navegador.
 
 ## Próximos passos (se quiser)
 

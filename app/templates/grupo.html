@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% if group %}
+<title>{{ group.name }} — Gruposzap18</title>
+<meta name="description" content="{{ meta_description }}">
+<link rel="canonical" href="{{ site_url }}/grupo.html?id={{ group.id }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gruposzap18">
+<meta property="og:title" content="{{ group.name }} — Gruposzap18">
+<meta property="og:description" content="{{ meta_description }}">
+<meta property="og:url" content="{{ site_url }}/grupo.html?id={{ group.id }}">
+{% if group.photo %}<meta property="og:image" content="{{ group.photo }}">{% endif %}
+<meta name="twitter:card" content="{{ 'summary_large_image' if group.photo else 'summary' }}">
+<meta name="twitter:title" content="{{ group.name }} — Gruposzap18">
+<meta name="twitter:description" content="{{ meta_description }}">
+{% else %}
+<title>Grupo não encontrado — Gruposzap18</title>
+<meta name="robots" content="noindex">
+{% endif %}
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="./">
+      <span class="mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2c1 3-1.5 4-1.5 6.5 0 1.4 1 2.1 2 2.1.9 0 1.6-.6 1.8-1.3.7 1 1.2 2.3 1.2 3.7 0 3.4-2.5 6-6 6s-6.2-2.6-6.2-6c0-4 3.7-6.7 4-9 .3 1 .2 2.1-.3 3 1.4-1 3-2.6 3-5z" fill="#fff2ea"/>
+        </svg>
+      </span>
+      <div>
+        GRUPOSZAP18
+        <small>Hub de Grupos</small>
+      </div>
+    </a>
+    <div class="top-links">
+      <a href="./">Voltar</a>
+    </div>
+  </header>
+
+  <main>
+    {% if group %}
+    <article id="groupDetail" class="detail-card">
+      {% if group.photo %}
+      <div class="detail-photo" id="detailPhotoWrap">
+        <img id="detailPhoto" src="{{ group.photo }}" alt="">
+      </div>
+      {% endif %}
+      <div class="detail-body">
+        <div class="detail-top">
+          <div class="platform">
+            <span class="icon" id="detailIcon">{{ plat_icon[group.plat] | safe }}</span>
+            <h1 id="detailName" class="detail-name">{{ group.name }}</h1>
+          </div>
+          <span class="members" id="detailMembers">{{ "{:,}".format(group.members).replace(",", ".") }} membros</span>
+        </div>
+        <span class="tag" id="detailTag">{{ plat_label[group.plat] }}</span>
+        <p class="detail-desc" id="detailDesc">{{ group.desc }}</p>
+        <a class="btn" id="detailJoin" href="{{ group.link }}" target="_blank" rel="nofollow noopener noreferrer">Entrar no grupo</a>
+      </div>
+    </article>
+    {% else %}
+    <div id="notFoundState" style="text-align:center; padding:60px 20px; color:var(--text-mute);">
+      <h3 style="font-family:'Bodoni Moda', Georgia, serif; color:var(--text-dim); font-size:1.1rem; margin-bottom:8px;">Grupo não encontrado</h3>
+      <p>Esse grupo pode ter sido removido. <a href="./" style="color:var(--ember-bright);">Voltar pro hub</a>.</p>
+    </div>
+    {% endif %}
+  </main>
+
+  <footer>
+    <div>🔥 <strong>Gruposzap18</strong> — hub comunitário de grupos.</div>
+  </footer>
+</div>
+
+</body>
+</html>
