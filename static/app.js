@@ -71,7 +71,7 @@
         '<p class="desc">' + escapeHtml(g.desc) + '</p>' +
         '<div class="card-foot">' +
           '<span class="tag">' + label + '</span>' +
-          '<a class="join" href="grupo.html?id=' + encodeURIComponent(g.id) + '" target="_blank" rel="noopener" aria-label="Ver grupo ' + escapeHtml(g.name) + '">Entrar' +
+          '<a class="join" href="grupo.html?id=' + encodeURIComponent(g.id) + '" aria-label="Ver grupo ' + escapeHtml(g.name) + '">Entrar' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
           '</a>' +
         '</div>';
